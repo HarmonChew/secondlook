@@ -5,7 +5,7 @@
   "description": "Local-first review loop for coding-agent changes: isolated Git worktrees, real baseline and candidate browser evidence, and an explicit human acceptance decision.",
   "type": "module",
   "license": "Apache-2.0",
-  "author": "Harmon Chew",
+  "author": "Harmon Chew <harmontchew@gmail.com>",
   "homepage": "https://github.com/HarmonChew/secondlook#readme",
   "repository": {
     "type": "git",
