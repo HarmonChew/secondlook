@@ -9,3 +9,6 @@ test-results/
 .env*
 !.env.example
 *.log
+
+# Local working notes (private, never published).
+docs/local/
