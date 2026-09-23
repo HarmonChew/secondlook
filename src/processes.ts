@@ -328,7 +328,7 @@ export class ProcessManager {
         if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
         const owner = await this.readLockOwner(path);
         if (!owner) continue;
-        if (await this.lockOwnerIsLive(owner)) throw new Error('Another Engine service already owns the lock');
+        if (await this.lockOwnerIsLive(owner)) throw new Error('Another Secondlook service already owns the lock');
 
         let guardAcquired = false;
         try {
@@ -345,7 +345,7 @@ export class ProcessManager {
           // Re-read under the exclusive guard. Another contender may have
           // replaced the stale file between the first read and mkdir().
           const current = await this.readLockOwner(path);
-          if (current && await this.lockOwnerIsLive(current)) throw new Error('Another Engine service already owns the lock');
+          if (current && await this.lockOwnerIsLive(current)) throw new Error('Another Secondlook service already owns the lock');
           if (current) {
             try { await fs.unlink(path); } catch (unlinkError) {
               if ((unlinkError as NodeJS.ErrnoException).code !== 'ENOENT') throw unlinkError;

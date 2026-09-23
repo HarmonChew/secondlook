@@ -9,7 +9,7 @@ const units = [
 const sessions = new Map();
 
 function sessionKey(request) {
-  const value = request.headers['x-engine-session'];
+  const value = request.headers['x-secondlook-session'];
   return typeof value === 'string' && value.length > 0 ? value : 'anonymous';
 }
 
@@ -54,7 +54,7 @@ const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url || '/', 'http://127.0.0.1');
     if (url.pathname === '/health' && request.method === 'GET') {
-      sendJson(response, 200, { ok: true, service: 'engine-profile-fixture' });
+      sendJson(response, 200, { ok: true, service: 'secondlook-profile-fixture' });
       return;
     }
     if (url.pathname === '/__fixture/reset' && request.method === 'POST') {

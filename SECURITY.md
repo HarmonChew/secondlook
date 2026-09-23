@@ -1,6 +1,6 @@
 # Security and privacy
 
-Engine is a local trusted-host developer tool. It is not a security sandbox
+Secondlook is a local trusted-host developer tool. It is not a security sandbox
 for arbitrary repositories, model output, or hostile project code. Report
 security issues privately before opening a public issue when possible.
 
@@ -42,14 +42,14 @@ paths, dependencies, and generated outputs. Writes require the previous
 content hash or explicit new-file creation. The model has no shell or general
 network tool; the worker itself connects to the selected hosted model API.
 These file checks are not a sandbox against hostile processes racing filesystem
-changes. Engine remains responsible for installs, checks, and browser evidence.
+changes. Secondlook remains responsible for installs, checks, and browser evidence.
 
 Executable extensions loaded with `--trust-extension` are trusted host code.
-Engine never executes newly discovered repository configuration automatically.
+Secondlook never executes newly discovered repository configuration automatically.
 Only a maintainer who explicitly supplies both `--extension PATH` and
 `--trust-extension` should load one. An extension can declare local helper or
 configuration dependencies with `sourceFiles`; all such files must be declared
-or bundled because Engine does not promise automatic import-graph discovery.
+or bundled because Secondlook does not promise automatic import-graph discovery.
 The entry and declared files are hashed, and changes invalidate the current
 registry digest and require a restart/approval.
 
@@ -63,7 +63,7 @@ publication.
 - Keep API keys and environment values out of requests, scenario JSON, Git,
   screenshots, videos, traces, and logs.
 - Use `envRefs` and `headersRefs` as names of existing environment variables;
-  Engine stores references and digests, not ordinary credential values.
+  Secondlook stores references and digests, not ordinary credential values.
 - Process logs redact explicit environment references, scenario header values,
   and values read from approved browser auth state. Credential-like values
   shorter than four characters are rejected rather than logged as safely
@@ -87,7 +87,7 @@ Dependency integrity is separate from source fingerprinting. The approved
 manifest covers `node_modules` files, modes, contained symlink targets, and
 missing/present directories, excluding direct `.vite`, `.vite-temp`, and
 `.cache` tooling caches. Agent or manual dependency edits block and invalidate
-the review while preserving files; Engine does not silently reinstall, delete,
+the review while preserving files; Secondlook does not silently reinstall, delete,
 or adopt an unknown dependency tree. Restore a known installation or start a
 fresh approved run. Scanning cost grows with dependency-tree size.
 
@@ -97,7 +97,7 @@ should still treat downloaded files as untrusted content.
 
 ## Workspaces and cleanup
 
-The data directory must be outside the normal target checkout. Engine creates
+The data directory must be outside the normal target checkout. Secondlook creates
 baseline/candidate worktrees below it and records signed ownership markers.
 Cleanup checks exact repository/worktree ownership and clean status; it refuses
 dirty paths and ignored-untracked files (including `node_modules` and `.env`),
@@ -112,7 +112,7 @@ runtime upgrade, re-run verification before accepting existing evidence.
 
 ## Reporting
 
-Please include the Engine version, operating system, Node version, reproduction
+Please include the Secondlook version, operating system, Node version, reproduction
 steps, and whether the Codex driver, Pi provider, or a trusted extension was enabled. Remove
 tokens, source code, authentication state, and captured secrets from reports.
 Do not attach `access-token`, `.env*`, auth JSON, raw model prompts, or unreviewed

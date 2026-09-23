@@ -10,7 +10,7 @@ import type { ProcessManager } from '../src/processes.ts';
 import { PiDriver } from '../src/drivers/pi.ts';
 import { listModelProviders, resolvePiModel, streamPiModel } from '../src/providers/pi.ts';
 import { Registry } from '../src/extensions.ts';
-import { Engine } from '../src/workflow.ts';
+import { Secondlook } from '../src/workflow.ts';
 import { createRunSchema, runSchema } from '../src/contracts.ts';
 import { demoProfile, demoScenarios, ensureDemoRepository } from '../src/demo.ts';
 
@@ -34,7 +34,7 @@ describe('Pi provider boundary', () => {
     expect(providers.every(provider => provider.models.length > 0)).toBe(true);
     expect(JSON.stringify(providers)).not.toContain('test-key-never-public');
     expect(resolvePiModel(model).model.id).toBe(model.id);
-    expect(() => resolvePiModel({ ...model, id: 'unknown-engine-model' })).toThrow('Unknown');
+    expect(() => resolvePiModel({ ...model, id: 'unknown-secondlook-model' })).toThrow('Unknown');
     expect(() => resolvePiModel({ ...model, provider: 'https://unapproved.example' })).toThrow('Unknown');
     expect(() => streamPiModel(model, { messages: [] }, {})).toThrow('unavailable');
   });
@@ -81,7 +81,7 @@ describe('Pi provider boundary', () => {
     const apiKey = 'fake-pi-key-for-tests-only';
     vi.stubEnv('OPENAI_API_KEY', apiKey);
     vi.stubEnv('ANTHROPIC_API_KEY', 'unrelated-fake-key');
-    const root = await mkdtemp(join(tmpdir(), 'engine-pi-driver-'));
+    const root = await mkdtemp(join(tmpdir(), 'secondlook-pi-driver-'));
     const events: ExecutionEvent[] = [];
     const run = vi.fn(async (_runId: string, command: Command, workspace: string, signal: AbortSignal) => {
       expect(workspace).toBe(root);
@@ -104,7 +104,7 @@ describe('Pi provider boundary', () => {
 
   it('rejects nonzero workers, malformed results, and cancellation', async () => {
     vi.stubEnv('OPENAI_API_KEY', 'fake-key');
-    const root = await mkdtemp(join(tmpdir(), 'engine-pi-driver-errors-'));
+    const root = await mkdtemp(join(tmpdir(), 'secondlook-pi-driver-errors-'));
     const run = vi.fn(async (_runId: string, command: Command) => {
       await writeFile(command.args.at(-1)!, '{"ok":true}');
       return { exitCode: 0, output: '', logPath: '' };
@@ -118,7 +118,7 @@ describe('Pi provider boundary', () => {
   });
 
   it.each(['aliased', 'malformed'])('boots without credentials and ignores a %s candidate tsconfig', async configuration => {
-    const root = await mkdtemp(join(tmpdir(), 'engine-pi-worker-bootstrap-'));
+    const root = await mkdtemp(join(tmpdir(), 'secondlook-pi-worker-bootstrap-'));
     const jobPath = join(root, 'worker.job.json');
     const resultPath = join(root, 'worker.result.json');
     const job = {
@@ -152,13 +152,13 @@ describe('Pi provider boundary', () => {
   });
 
   it('persists model selection without migrating existing runs or starting paid work', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-pi-persist-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-pi-persist-'));
     const registry = new Registry();
     const execute = vi.fn(async () => ({ outcome: 'blocked' as const, summary: 'test only' }));
     registry.register({ drivers: [{ id: 'pi', execute }] });
     // Without initialize(), the queue does not execute. This checks persistence
     // and catalog validation independently of browser/provider availability.
-    const engine = new Engine(dataDir, registry);
+    const engine = new Secondlook(dataDir, registry);
     let id: string;
     try {
       const input = createRunSchema.parse({ title: 'Pi ticket', request: 'Implement the title.', kind: 'feature', repository: await ensureDemoRepository(dataDir), driverId: 'pi', model, profile: demoProfile, scenarios: demoScenarios('feature'), approved: true });
@@ -170,7 +170,7 @@ describe('Pi provider boundary', () => {
       await expect(engine.create({ ...input, model: { ...model, id: 'not-in-catalog' } })).rejects.toThrow('Unknown Pi');
       expect(execute).not.toHaveBeenCalled();
     } finally { await engine.close(); }
-    const restarted = new Engine(dataDir);
+    const restarted = new Secondlook(dataDir);
     try { expect(restarted.store.getRun(id!).model).toEqual(model); }
     finally { await restarted.close(); }
   });

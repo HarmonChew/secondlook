@@ -3,11 +3,11 @@ import { chromium, expect as browserExpect } from '@playwright/test';
 import { mkdtemp } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { Engine } from '../src/workflow.js';
+import { Secondlook } from '../src/workflow.js';
 import { startServer } from '../src/server.js';
 
 it('shows real evidence and sends targeted feedback and exact-revision acceptance through the dashboard', async () => {
-  const engine = new Engine(await mkdtemp(join(tmpdir(), 'engine-dashboard-')));
+  const engine = new Secondlook(await mkdtemp(join(tmpdir(), 'secondlook-dashboard-')));
   await engine.initialize();
   const runtime = await startServer(engine, { port: 0 });
   const browser = await chromium.launch();
@@ -50,7 +50,7 @@ it('supports Pi provider/model selection without exposing credentials', async ()
   const fakeOpenAiKey = 'dashboard-fake-openai-key';
   vi.stubEnv('OPENAI_API_KEY', fakeOpenAiKey);
   vi.stubEnv('ANTHROPIC_API_KEY', '');
-  const engine = new Engine(await mkdtemp(join(tmpdir(), 'engine-dashboard-pi-')));
+  const engine = new Secondlook(await mkdtemp(join(tmpdir(), 'secondlook-dashboard-pi-')));
   await engine.initialize();
   const runtime = await startServer(engine, { port: 0 });
   const browser = await chromium.launch();
@@ -87,7 +87,7 @@ it('supports Pi provider/model selection without exposing credentials', async ()
     expect(selectedModel).not.toBe('');
     await page.getByLabel('Title', { exact: true }).fill('Pi picker test');
     await page.getByLabel('Request', { exact: true }).fill('Exercise the provider picker.');
-    await page.getByLabel('Target repository', { exact: true }).fill('/tmp/engine-dashboard-pi');
+    await page.getByLabel('Target repository', { exact: true }).fill('/tmp/secondlook-dashboard-pi');
 
     const requestBodies: Record<string, unknown>[] = [];
     await page.route('**/api/runs', async (route) => {

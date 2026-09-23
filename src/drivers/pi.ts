@@ -17,7 +17,7 @@ const workerResultSchema = z.object({
   events: z.array(z.object({ type: z.string().max(100), message: z.string().max(1000), data: z.record(z.string(), z.unknown()).optional() })).max(200),
 });
 
-/** A Pi transport/tool adapter supervised by Engine's existing process owner. */
+/** A Pi transport/tool adapter supervised by Secondlook's existing process owner. */
 export class PiDriver implements AgentDriver {
   readonly id = 'pi';
   constructor(private readonly processes: ProcessManager, private readonly timeoutMs = 300_000) {}
@@ -42,7 +42,7 @@ export class PiDriver implements AgentDriver {
     try { apiKeyEnv = resolvePiModel(job.model).apiKeyEnv; }
     catch { return blocked('unknown_model', 'The selected Pi provider or model is not in the current catalog.'); }
     const apiKey = process.env[apiKeyEnv];
-    if (!apiKey || apiKey.trim().length < 4) return blocked('missing_provider_api_key', `Set ${apiKeyEnv} in the Engine service environment before running this model.`);
+    if (!apiKey || apiKey.trim().length < 4) return blocked('missing_provider_api_key', `Set ${apiKeyEnv} in the Secondlook service environment before running this model.`);
 
     const staging = join(this.processes.dataDir, 'staging', 'pi');
     await mkdir(staging, { recursive: true, mode: 0o700 });

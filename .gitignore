@@ -2,7 +2,7 @@ node_modules/
 .pnpm-store/
 dist/
 coverage/
-.engine/
+.secondlook/
 output/
 test-results/
 *.db*

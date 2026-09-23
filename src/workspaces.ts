@@ -104,7 +104,7 @@ export class WorkspaceManager {
     const workspaceRoot = join(this.workspacesDir, run.id);
     const candidatePath = join(workspaceRoot, 'candidate');
     const baselinePath = run.kind === 'bugfix' ? join(workspaceRoot, 'baseline') : undefined;
-    const branch = `engine/${run.id}`;
+    const branch = `secondlook/${run.id}`;
     const markerPath = join(this.workspacesDir, `${run.id}.owner.json`);
     const operation = this.store.beginOperation('workspace-prepare', { repository, baseCommit: run.baseCommit, workspaceRoot, candidatePath, baselinePath, branch }, run.id);
     mkdirSync(workspaceRoot, { recursive: true, mode: 0o700 });
@@ -461,11 +461,11 @@ export class WorkspaceManager {
 
   private assertDataDirOutsideRepository(repository: string): void {
     const data = resolve(this.dataDir);
-    if (data === repository || data.startsWith(`${repository}${sep}`)) throw new Error('Engine data directory must be outside the target checkout');
+    if (data === repository || data.startsWith(`${repository}${sep}`)) throw new Error('Secondlook data directory must be outside the target checkout');
     const ownedProjects = resolve(this.dataDir, 'projects');
     const isOwnedProject = repository.startsWith(`${ownedProjects}${sep}`);
     if (repository === resolve(this.workspacesDir) || repository.startsWith(`${resolve(this.workspacesDir)}${sep}`) || (repository.startsWith(`${data}${sep}`) && !isOwnedProject)) {
-      throw new Error('Target checkout cannot overlap the Engine workspaces directory');
+      throw new Error('Target checkout cannot overlap the Secondlook workspaces directory');
     }
   }
 

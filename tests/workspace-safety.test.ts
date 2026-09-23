@@ -3,7 +3,7 @@ import { appendFile, chmod, mkdir, mkdtemp, readFile, rename, symlink, writeFile
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { Engine } from '../src/workflow.js';
+import { Secondlook } from '../src/workflow.js';
 import { Store } from '../src/store.js';
 import { WorkspaceManager } from '../src/workspaces.js';
 import { demoProfile, demoScenarios, ensureDemoRepository } from '../src/demo.js';
@@ -11,13 +11,13 @@ import { runSchema } from '../src/contracts.js';
 import { digest, now, uid } from '../src/util.js';
 
 async function setup() {
-  const dir = await mkdtemp(join(tmpdir(), 'engine-workspace-safety-'));
+  const dir = await mkdtemp(join(tmpdir(), 'secondlook-workspace-safety-'));
   const repository = await ensureDemoRepository(dir);
   await mkdir(join(repository, 'src', 'runtime'), { recursive: true });
   await writeFile(join(repository, 'src', 'runtime', 'auth.ts'), 'export const role = "test";\n');
   await writeFile(join(repository, '.gitignore'), '.env.local\nsrc/hidden.ts\n');
   execFileSync('git', ['-C', repository, 'add', 'src/runtime/auth.ts', '.gitignore']);
-  execFileSync('git', ['-C', repository, '-c', 'user.name=Engine test', '-c', 'user.email=engine-test@invalid.local', 'commit', '-m', 'Owned safety-test source'], { stdio: 'ignore' });
+  execFileSync('git', ['-C', repository, '-c', 'user.name=Secondlook test', '-c', 'user.email=secondlook-test@invalid.local', 'commit', '-m', 'Owned safety-test source'], { stdio: 'ignore' });
   const store = new Store(dir); const manager = new WorkspaceManager(dir, store);
   const resolved = await manager.resolveRepository(repository, 'HEAD');
   const run = runSchema.parse({ id: uid(), title: 'Unit test', request: 'Unit test', kind: 'bugfix', status: 'paused', phase: 'PREPARE', blockingReason: null, ...resolved, driverId: 'demo', demo: true, profile: demoProfile, profileDigest: digest(demoProfile), scenarios: demoScenarios('bugfix'), policy: {}, approvedAt: now(), createdAt: now(), updatedAt: now(), reviewRevision: 1, repairCount: 0, implementationAttempts: 0, evidenceIds: [], checkIds: [], feedbackIds: [], approvedOperations: [] });
@@ -67,9 +67,9 @@ it('reconciles cleanup completed before the run archive was saved', async () => 
   run.candidate = await manager.snapshot(run, path, 'candidate'); store.saveRun(run);
   // Commit only this owned test worktree so cleanup can safely remove it.
   execFileSync('git', ['-C', path, 'add', 'app.js']);
-  execFileSync('git', ['-C', path, '-c', 'user.name=Engine test', '-c', 'user.email=engine-test@invalid.local', 'commit', '-m', 'Owned cleanup-test source'], { stdio: 'ignore' });
+  execFileSync('git', ['-C', path, '-c', 'user.name=Secondlook test', '-c', 'user.email=secondlook-test@invalid.local', 'commit', '-m', 'Owned cleanup-test source'], { stdio: 'ignore' });
   await manager.cleanup(run); store.close();
-  const engine = new Engine(dir);
+  const engine = new Secondlook(dir);
   try {
     await engine.initialize(); const detail = await engine.detail(run.id);
     expect(detail.run.workspace).toBeUndefined(); expect(detail.run.status).toBe('cancelled');
@@ -83,7 +83,7 @@ it('blocks partial cleanup safely while keeping remaining worktrees and historic
   const operation = store.beginOperation('workspace-cleanup', { repository: run.repository, paths: [path, run.workspace!.baselinePath] }, run.id);
   execFileSync('git', ['-C', run.repository, 'worktree', 'remove', '--', path]);
   const preserved = join(run.workspace!.baselinePath!, '.env.local'); await writeFile(preserved, 'TEST_ONLY=preserve');
-  store.close(); const engine = new Engine(dir);
+  store.close(); const engine = new Secondlook(dir);
   try {
     await engine.initialize(); const detail = await engine.detail(run.id);
     expect(detail.run.status).toBe('blocked'); expect(detail.run.sourceStale).toBe(true);

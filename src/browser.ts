@@ -92,7 +92,7 @@ function expectedText(actual: string, expected: string): boolean {
 }
 
 function headerValues(scenario: ScenarioDefinition): Record<string, string> {
-  const headers: Record<string, string> = { 'x-engine-session': `engine-${uid()}` };
+  const headers: Record<string, string> = { 'x-secondlook-session': `secondlook-${uid()}` };
   for (const [header, envName] of Object.entries(scenario.fixture.headersRefs)) {
     const value = process.env[envName];
     if (!value) throw new EnvironmentFailure(`Required environment reference ${envName} is missing`);
@@ -356,9 +356,9 @@ export class BrowserRunner {
       }
       await context.tracing.start({ screenshots: true, snapshots: true, sources: false });
       const page = await context.newPage();
-      (page as Page & { __engineStageDir?: string }).__engineStageDir = stageDir;
+      (page as Page & { __secondlookStageDir?: string }).__secondlookStageDir = stageDir;
       try {
-        if (scenario.fixture.reset) await this.resetFixture(scenario, baseURL, sessionHeaders['x-engine-session'], sessionHeaders);
+        if (scenario.fixture.reset) await this.resetFixture(scenario, baseURL, sessionHeaders['x-secondlook-session'], sessionHeaders);
         await page.goto(routeURL(baseURL, scenario.route), { waitUntil: 'domcontentloaded' });
       } catch (error) {
         await context.close().catch(() => undefined);
@@ -372,7 +372,7 @@ export class BrowserRunner {
         browser: activeBrowser,
         context,
         page,
-        sessionId: sessionHeaders['x-engine-session'],
+        sessionId: sessionHeaders['x-secondlook-session'],
         headers: sessionHeaders,
         stageDir,
         video: page.video(),
@@ -391,7 +391,7 @@ export class BrowserRunner {
     try {
       const response = await fetch(routeURL(baseURL, reset.path), {
         method: 'POST',
-        headers: { ...approvedHeaders, 'content-type': 'application/json', 'x-engine-session': sessionId },
+        headers: { ...approvedHeaders, 'content-type': 'application/json', 'x-secondlook-session': sessionId },
         body: reset.body === undefined ? undefined : JSON.stringify(reset.body),
         signal: AbortSignal.timeout(10_000),
         redirect: 'error'
@@ -506,11 +506,11 @@ export class BrowserRunner {
     void existing;
     // Playwright does not expose the recording directory. The runner stores
     // the staging directory on the page through a private symbol instead.
-    const attached = (page as Page & { __engineStageDir?: string }).__engineStageDir;
+    const attached = (page as Page & { __secondlookStageDir?: string }).__secondlookStageDir;
     if (!attached) {
       const path = join(this.store.dataDir, 'staging', uid());
       await mkdir(path, { recursive: true, mode: 0o700 });
-      (page as Page & { __engineStageDir?: string }).__engineStageDir = path;
+      (page as Page & { __secondlookStageDir?: string }).__secondlookStageDir = path;
       return path;
     }
     return attached;

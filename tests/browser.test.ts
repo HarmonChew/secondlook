@@ -50,7 +50,7 @@ function makeRun(store: Store, repository: string, kind: 'bugfix' | 'feature', s
     title: 'Browser test', request: 'Demo request', kind, status: 'running', phase: kind === 'bugfix' ? 'CAPTURE_BASELINE' : 'VERIFY_CANDIDATE',
     blockingReason: null, repository, baseCommit: 'HEAD', driverId: 'demo', demo: true, profile: demoProfile, scenarios: [scenario],
     policy: { repairLimit: 1, infrastructureRetries: 0, requiredCheckIds: [], approvalBefore: [] }, approvedAt: time, profileDigest: digest(demoProfile), createdAt: time, updatedAt: time,
-    workspace: { id: ref.workspaceId, candidatePath: repository, baselinePath: repository, branch: 'engine/test' }, candidate: ref,
+    workspace: { id: ref.workspaceId, candidatePath: repository, baselinePath: repository, branch: 'secondlook/test' }, candidate: ref,
     baseline: ref, reviewRevision: 1, repairCount: 0, implementationAttempts: 0, evidenceIds: [], checkIds: [], feedbackIds: [], approvedOperations: [], sourceStale: false
   });
   store.saveRun(run);
@@ -65,7 +65,7 @@ async function stopFixture(child: ChildProcess): Promise<void> {
 
 describe('BrowserRunner', () => {
   it('captures a real failing baseline and passing candidate in fresh contexts', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-browser-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-browser-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const scenario = demoScenarios('bugfix')[0];
@@ -102,7 +102,7 @@ describe('BrowserRunner', () => {
   }, 60_000);
 
   it('applies approved API mocks to automated and interactive contexts', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-browser-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-browser-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const scenario = demoScenarios('feature')[0];
@@ -126,7 +126,7 @@ describe('BrowserRunner', () => {
   }, 60_000);
 
   it('keeps an interactive candidate independent while automated verification runs and resets once per context', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-browser-interactive-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-browser-interactive-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const scenario = demoScenarios('bugfix')[0];
@@ -145,7 +145,7 @@ describe('BrowserRunner', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
       const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
       if (new URL(url).pathname === '/__fixture/reset') {
-        resetSessions.push(new Headers(init?.headers).get('x-engine-session') ?? '');
+        resetSessions.push(new Headers(init?.headers).get('x-secondlook-session') ?? '');
       }
       return realFetch(input, init);
     });
@@ -213,7 +213,7 @@ describe('BrowserRunner', () => {
   }, 60_000);
 
   it('classifies unsafe reset paths and missing referenced headers as environment errors', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-browser-security-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-browser-security-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     try {
@@ -247,7 +247,7 @@ describe('BrowserRunner', () => {
   }, 60_000);
 
   it('distinguishes an unestablished precondition from a reproduced expectation failure', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-browser-classification-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-browser-classification-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const original = demoScenarios('bugfix')[0];

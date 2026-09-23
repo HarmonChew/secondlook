@@ -59,7 +59,7 @@ explicit `role`; a bug-fix regression assertion is named by ID.
 The scenario is a review input, not an implementation output. Store it in the
 ticket payload or another approved system outside the candidate source tree.
 When a scenario changes, increment its revision and use the dashboard’s revised
-scenario action. Engine recaptures a bug-fix baseline and invalidates the old
+scenario action. Secondlook recaptures a bug-fix baseline and invalidates the old
 comparison. Manual source edits continue to use the original approved baseline
 until the scenario itself changes. A feature run has no baseline; its UI
 intentionally displays after-only evidence and `Baseline not applicable`.
@@ -96,7 +96,7 @@ is loaded only by an explicit `--extension PATH --trust-extension` command.
 An extension may export `sourceFiles?: string[]` relative to its entry module.
 The entry file and each declared local/transitive helper/configuration file are
 hashed at load and rechecked during the run. Helpers and configuration files
-must be declared or bundled; Engine does not promise to discover an import
+must be declared or bundled; Secondlook does not promise to discover an import
 graph automatically. Extension code is trusted host code, not a sandbox; it can
 read files and use host permissions available to its Node process.
 

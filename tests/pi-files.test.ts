@@ -9,7 +9,7 @@ import { digest } from '../src/util.ts';
 const allSource: ProjectProfile['source'] = { include: ['**/*'], exclude: [] };
 
 async function rootDirectory() {
-  return mkdtemp(join(tmpdir(), 'engine-pi-files-'));
+  return mkdtemp(join(tmpdir(), 'secondlook-pi-files-'));
 }
 
 describe('PiFiles', () => {
@@ -176,12 +176,12 @@ describe('PiFiles', () => {
 
     await files.write('target.ts', original, null);
     expect((await files.list()).files).toEqual(['target.ts']);
-    expect((await readdir(root)).some(entry => entry.startsWith('.engine-pi-'))).toBe(false);
+    expect((await readdir(root)).some(entry => entry.startsWith('.secondlook-pi-'))).toBe(false);
     expect(await readdir(staging)).toEqual([]);
 
     await expect(files.write('target.ts', 'stale update\n', null)).rejects.toThrow(/changed/i);
     expect(await readFile(join(root, 'target.ts'), 'utf8')).toBe(original);
-    expect((await readdir(root)).some(entry => entry.startsWith('.engine-pi-'))).toBe(false);
+    expect((await readdir(root)).some(entry => entry.startsWith('.secondlook-pi-'))).toBe(false);
     expect(await readdir(staging)).toEqual([]);
   });
 });

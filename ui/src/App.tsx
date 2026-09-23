@@ -24,7 +24,7 @@ import type {
 type DriverOption = { id: string; name: string };
 type ModelOption = { id: string; name: string; contextWindow: number; maxTokens: number; reasoning: boolean };
 type ModelProvider = { id: string; name: string; apiKeyEnv: string; configured: boolean; models: ModelOption[] };
-type EngineConfig = {
+type SecondlookConfig = {
   drivers: DriverOption[];
   modelProviders: ModelProvider[];
   demo: {
@@ -49,7 +49,7 @@ type ActionName =
   | 'reset-preview'
   | 'close-preview';
 
-const TOKEN_KEY = 'engine-review-token';
+const TOKEN_KEY = 'secondlook-review-token';
 
 class ApiFailure extends Error {
   status: number;
@@ -177,7 +177,7 @@ function TokenEntry({ onSubmit, error }: { onSubmit: (token: string) => void; er
     <main className="auth-shell">
       <section className="auth-card" aria-labelledby="auth-title">
         <div className="brand-mark" aria-hidden="true">e</div>
-        <p className="eyebrow">Engine · local change review</p>
+        <p className="eyebrow">Secondlook · local change review</p>
         <h1 id="auth-title">Review what your agent changed.</h1>
         <p className="lede">Enter the local review token printed when the service starts. It stays in this browser session and is never put in a URL.</p>
         <form onSubmit={submit} className="stack gap-3">
@@ -202,7 +202,7 @@ function Header({ onHome, onNew, onSignOut, security }: { onHome: () => void; on
     <header className="app-header">
       <div className="header-inner">
         <button type="button" className="brand-button" onClick={onHome} aria-label="Open ticket board">
-          <span className="brand-mark small" aria-hidden="true">e</span><span>Engine</span>
+          <span className="brand-mark small" aria-hidden="true">e</span><span>Secondlook</span>
         </button>
         <span className="project-name">Change review</span>
         <div className="header-actions">
@@ -295,7 +295,7 @@ type NewForm = {
   approved: boolean;
 };
 
-function NewTicketModal({ config, onClose, onSubmit, submitting, error }: { config: EngineConfig; onClose: () => void; onSubmit: (input: CreateRunInput) => void; submitting: boolean; error?: string | null }) {
+function NewTicketModal({ config, onClose, onSubmit, submitting, error }: { config: SecondlookConfig; onClose: () => void; onSubmit: (input: CreateRunInput) => void; submitting: boolean; error?: string | null }) {
   const [advanced, setAdvanced] = useState(false);
   const selectableDrivers = config.drivers.filter((driver) => driver.id !== 'demo');
   const defaultDriver = selectableDrivers.find((driver) => driver.id === 'codex')?.id ?? selectableDrivers[0]?.id ?? 'codex';
@@ -474,7 +474,7 @@ function DetailView({ detail, token, onBack, onAction, actionBusy, onRefresh, no
 
 function App() {
   const [token, setToken] = useState<string | null>(() => tokenFromLocation());
-  const [config, setConfig] = useState<EngineConfig | null>(null);
+  const [config, setConfig] = useState<SecondlookConfig | null>(null);
   const [runs, setRuns] = useState<Run[]>([]);
   const [detail, setDetail] = useState<RunDetail | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -501,7 +501,7 @@ function App() {
     polling.current = true;
     if (initial) setLoading(true);
     try {
-      const [nextConfig, result] = await Promise.all([config ? Promise.resolve(config) : api<EngineConfig>(token, '/api/config'), api<{ runs: Run[] }>(token, '/api/runs')]);
+      const [nextConfig, result] = await Promise.all([config ? Promise.resolve(config) : api<SecondlookConfig>(token, '/api/config'), api<{ runs: Run[] }>(token, '/api/runs')]);
       if (!mounted.current) return;
       setConfig(nextConfig);
       setRuns(result.runs);

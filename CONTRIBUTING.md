@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for improving Engine. The project is intentionally small: make the
+Thanks for improving Secondlook. The project is intentionally small: make the
 review loop more trustworthy without turning it into a universal agent
 platform.
 
@@ -17,7 +17,7 @@ pnpm build
 pnpm test
 ```
 
-Use `pnpm dev --data-dir /tmp/engine-review-dev` for dashboard work. Use the
+Use `pnpm dev --data-dir /tmp/secondlook-review-dev` for dashboard work. Use the
 deterministic demo or fake driver for normal development; real provider calls are
 opt-in, credentialed, and budgeted.
 

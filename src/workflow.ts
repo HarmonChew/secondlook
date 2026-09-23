@@ -46,7 +46,7 @@ class CommandCheck implements VerificationCheck {
   }
 }
 
-export class Engine {
+export class Secondlook {
   readonly store: Store;
   readonly workspaces: WorkspaceManager;
   readonly processes: ProcessManager;
@@ -411,7 +411,7 @@ export class Engine {
         await this.dependenciesUnchanged(run, path);
         const before = await this.workspaces.fingerprint(path, run.profile);
         if (before !== candidate.sourceDigest) { run.sourceStale = true; throw new Blocked('Source changed since the candidate snapshot. Resume to verify the new revision.'); }
-        let managed: Awaited<ReturnType<Engine['startService']>> | undefined;
+        let managed: Awaited<ReturnType<Secondlook['startService']>> | undefined;
         latest = [];
         try {
           try { managed = await this.startService(run, path, signal); }

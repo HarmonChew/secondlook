@@ -37,6 +37,6 @@
   ],
   "source": {
     "include": ["**/*"],
-    "exclude": [".git/**", "node_modules/**", "dist/**", "coverage/**", "test-results/**", ".engine-artifacts/**"]
+    "exclude": [".git/**", "node_modules/**", "dist/**", "coverage/**", "test-results/**", ".secondlook-artifacts/**"]
   }
 }

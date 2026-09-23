@@ -1,6 +1,6 @@
-# Engine — local AI change review
+# Secondlook — local AI change review
 
-Engine is a local-first review loop for changes made by a coding agent. It
+Secondlook is a local-first review loop for changes made by a coding agent. It
 keeps an approved request, project profile, and Playwright scenario together;
 creates isolated Git worktrees; captures real baseline/candidate evidence; and
 gives a reviewer a candidate they can open, reset, inspect, and accept.
@@ -67,13 +67,13 @@ The package manager build allowlist is in `pnpm-workspace.yaml`.
 Use the foreground service with a data directory outside the target checkout:
 
 ```bash
-pnpm start --data-dir /tmp/engine-review-data
+pnpm start --data-dir /tmp/secondlook-review-data
 ```
 
 The default data directory is:
 
 ```text
-~/.local/state/engine-review
+~/.local/state/secondlook-review
 ```
 
 The service binds to `127.0.0.1` only. It prints a dashboard URL and the exact
@@ -82,13 +82,13 @@ token file path. The token is stored as a 0600 file at
 dashboard when prompted. `--open` opens the URL in the system browser:
 
 ```bash
-pnpm start --data-dir /tmp/engine-review-data --open
+pnpm start --data-dir /tmp/secondlook-review-data --open
 ```
 
 For frontend iteration, use Vite middleware:
 
 ```bash
-pnpm dev --data-dir /tmp/engine-review-data
+pnpm dev --data-dir /tmp/secondlook-review-data
 ```
 
 The service remains in the foreground. `Ctrl+C` stops processes owned by the
@@ -99,7 +99,7 @@ service and closes the SQLite store.
 The demo needs no paid model account or private service:
 
 ```bash
-pnpm demo --data-dir /tmp/engine-review-demo --open
+pnpm demo --data-dir /tmp/secondlook-review-demo --open
 ```
 
 The command automatically queues one bug-fix demo. Open its ticket in the
@@ -125,7 +125,7 @@ driver or a custom driver and may block in demo mode.
 The feature demo is after-only:
 
 ```bash
-pnpm demo --feature --data-dir /tmp/engine-review-feature --open
+pnpm demo --feature --data-dir /tmp/secondlook-review-feature --open
 ```
 
 It exercises populated, empty, and API-error organization-unit states using
@@ -222,7 +222,7 @@ zero through three). Infrastructure retries are separate and never become
 coding repairs.
 
 `Pause safely` waits for the active writer and owned processes to quiesce before
-reporting that the candidate is safe to edit. On resume, Engine fingerprints
+reporting that the candidate is safe to edit. On resume, Secondlook fingerprints
 relevant source files, preserves manual edits, creates a new candidate snapshot,
 and marks old evidence/acceptance stale. It never resets manual edits just to
 retry.
@@ -240,7 +240,7 @@ policy, while source paths such as `src/runtime` remain eligible. `.env*`, PEM,
 and key contents never enter the fingerprint or diff; a changed or newly
 untracked sensitive file instead blocks the run and must be supplied through an
 approved environment reference. Ancestor symlinks are rejected. A runtime
-upgrade changes the verification-runtime digest (Engine source plus lockfile),
+upgrade changes the verification-runtime digest (Secondlook source plus lockfile),
 so existing evidence must be reverified before acceptance.
 
 If the relevant source digest or package/configuration manifest/lock inputs
@@ -250,7 +250,7 @@ unknown effects blocks instead of being replayed blindly. Existing dependency
 state is checked before reinstalling, so a hidden dependency edit cannot become
 approved merely because installation exits successfully.
 
-Dependency integrity is separate from the source digest. Engine records a
+Dependency integrity is separate from the source digest. Secondlook records a
 SHA-256 manifest of `node_modules` files, executable modes, contained symlink
 targets, and missing/present scanned directories; direct `.vite`, `.vite-temp`,
 and `.cache` tooling caches are excluded. Agent or manual dependency edits
@@ -268,11 +268,11 @@ excluded outputs is not supported or verified.
 Cleanup requires an exact run ID and refuses unowned, non-Git, missing-marker,
 dirty, or ignored-untracked worktrees (including `node_modules` and `.env`
 files). Dirty or ignored-untracked worktrees are preserved by default. If a
-cleanup operation is only partially observed, Engine blocks conservatively and
+cleanup operation is only partially observed, Secondlook blocks conservatively and
 preserves the recorded snapshot/diff and data rather than auto-deleting paths:
 
 ```bash
-pnpm exec tsx src/cli.ts cleanup --run RUN_ID --data-dir /tmp/engine-review-demo
+pnpm exec tsx src/cli.ts cleanup --run RUN_ID --data-dir /tmp/secondlook-review-demo
 ```
 
 ## Real Codex integration
@@ -289,7 +289,7 @@ mechanism before starting the service:
 
 ```bash
 export CODEX_API_KEY='...'
-pnpm start --data-dir /tmp/engine-review-real
+pnpm start --data-dir /tmp/secondlook-review-real
 ```
 
 No real-model call is made by the normal demo or test suite. Without the key,
@@ -307,12 +307,12 @@ See [docs/agent-drivers.md](docs/agent-drivers.md).
 ## Multiple model providers with Pi AI
 
 Choose **Pi AI (multiple providers)** in a new ticket, then choose a provider
-and model. Engine uses the pinned `@earendil-works/pi-ai` catalog for OpenAI,
+and model. Secondlook uses the pinned `@earendil-works/pi-ai` catalog for OpenAI,
 Anthropic, Google, OpenRouter, Groq, Mistral, and xAI. The selection is saved with
 the ticket and reused for repairs. Codex remains the default driver.
 
 Set the selected provider's API key in the service environment before starting
-Engine; for example, Anthropic uses `ANTHROPIC_API_KEY`, Google uses
+Secondlook; for example, Anthropic uses `ANTHROPIC_API_KEY`, Google uses
 `GEMINI_API_KEY`, and OpenAI uses `OPENAI_API_KEY`. The form shows the exact
 variable required and whether it is configured. A configured key does not prove
 access to every model in the catalog. Keys never go in ticket JSON or the UI.
@@ -320,7 +320,7 @@ access to every model in the catalog. Keys never go in ticket JSON or the UI.
 The Pi worker can list, read, and write approved candidate source files. It
 uses bounded tool calls, checks content hashes before overwriting files, and
 blocks sensitive paths, symlinks, dependencies, and generated directories.
-Engine runs installation, commands, and browser verification after the edits.
+Secondlook runs installation, commands, and browser verification after the edits.
 This first adapter has no shell, delete, or rename tool, and supports API keys
 only; OAuth, local models, and custom endpoints are not configured here.
 
@@ -337,7 +337,7 @@ with an explicit command-line approval:
 
 ```bash
 pnpm start \
-  --data-dir /tmp/engine-review-custom \
+  --data-dir /tmp/secondlook-review-custom \
   --extension ./examples/custom-check.ts \
   --trust-extension
 ```
@@ -348,7 +348,7 @@ actual deterministic check from outside core source. To require it, include
 `html-language` in the ticket policy’s `requiredCheckIds`. The extension entry
 file is hashed at load time. An extension may declare local helper/configuration
 files with `sourceFiles`; every helper or configuration file must be declared or
-bundled. Engine hashes the declared local/transitive dependency files, but does
+bundled. Secondlook hashes the declared local/transitive dependency files, but does
 not promise to discover an import graph automatically. Changing any declared
 source makes current evidence stale and requires a restart plus explicit
 approval of the new version.

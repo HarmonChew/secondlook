@@ -3,26 +3,26 @@ import { appendFile, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { Engine, assertTransition } from '../src/workflow.js';
+import { Secondlook, assertTransition } from '../src/workflow.js';
 import { Registry } from '../src/extensions.js';
 import { FakeDriver } from '../src/drivers/fake.js';
 import { CodexDriver } from '../src/drivers/codex.js';
 import { createRunSchema, type AgentDriver, type Run } from '../src/contracts.js';
 import { demoProfile, demoScenarios, ensureDemoRepository } from '../src/demo.js';
 
-const engines: Engine[] = [];
+const engines: Secondlook[] = [];
 async function setup(driver?: AgentDriver, extension = false) {
-  const path = await mkdtemp(join(tmpdir(), 'engine-workflow-'));
+  const path = await mkdtemp(join(tmpdir(), 'secondlook-workflow-'));
   const registry = new Registry();
   if (driver) registry.register({ drivers: [driver] });
   if (extension) await registry.load(resolve('examples/custom-check.ts'), true);
-  const engine = new Engine(path, registry); engines.push(engine); await engine.initialize(); return engine;
+  const engine = new Secondlook(path, registry); engines.push(engine); await engine.initialize(); return engine;
 }
 async function until(test: () => boolean) {
   const deadline = Date.now() + 15000;
   while (!test()) { if (Date.now() > deadline) throw new Error('Condition timed out'); await sleep(25); }
 }
-async function customRun(engine: Engine, changes: Record<string, unknown> = {}) {
+async function customRun(engine: Secondlook, changes: Record<string, unknown> = {}) {
   return engine.create(createRunSchema.parse({ title: 'Test review', request: 'Fix persistence', kind: 'bugfix', repository: await ensureDemoRepository(engine.dataDir), profile: demoProfile, scenarios: demoScenarios('bugfix'), driverId: 'demo', approved: true, ...changes }), true);
 }
 afterEach(async () => { for (const engine of engines.splice(0)) await engine.close(); });
@@ -206,7 +206,7 @@ describe('workflow invariants', () => {
     const interrupted: Run = { ...settled, status: 'running', phase: 'IMPLEMENT' };
     engine.store.saveRun(interrupted); engine.store.startAttempt(run.id, 'IMPLEMENT');
     const dir = engine.dataDir; await engine.close(); engines.splice(engines.indexOf(engine), 1);
-    const restarted = new Engine(dir); engines.push(restarted); await restarted.initialize();
+    const restarted = new Secondlook(dir); engines.push(restarted); await restarted.initialize();
     const recovered = restarted.store.getRun(run.id);
     expect(recovered.status).toBe('blocked'); expect(recovered.phase).toBe('VERIFY_CANDIDATE');
     expect(restarted.store.attempts(run.id).at(-1)?.status).toBe('interrupted');

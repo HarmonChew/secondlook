@@ -4,7 +4,7 @@ import { chmod, lstat, readFile, realpath, stat, writeFile } from 'node:fs/promi
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
-import { Engine } from './workflow.js';
+import { Secondlook } from './workflow.js';
 import { createRunSchema, idSchema } from './contracts.js';
 import { demoProfile, demoScenarios } from './demo.js';
 import { errorText, inside, redact } from './util.js';
@@ -44,7 +44,7 @@ export async function accessToken(dataDir: string) {
   }
 }
 
-export async function startServer(engine: Engine, options: { port?: number; dev?: boolean; token?: string } = {}) {
+export async function startServer(engine: Secondlook, options: { port?: number; dev?: boolean; token?: string } = {}) {
   const token = options.token ?? await accessToken(engine.dataDir);
   let origin = '';
   let mutations = Promise.resolve();

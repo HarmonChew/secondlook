@@ -27,7 +27,7 @@ const emitter = () => {
 
 describe('FakeDriver', () => {
   it('patches only the owned profile fixture and emits structured events', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'engine-driver-'));
+    const root = await mkdtemp(join(tmpdir(), 'secondlook-driver-'));
     const appPath = join(root, 'app.js');
     await (await import('node:fs/promises')).writeFile(appPath, '/* ENGINE_PROFILE_FIXTURE_V1 */\nconst PERSIST_PROFILE = false;\nconst ENABLE_UNITS = false;\n', 'utf8');
     const sink = emitter();
@@ -38,7 +38,7 @@ describe('FakeDriver', () => {
   });
 
   it('rejects arbitrary feedback and supports bounded no-op failures', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'engine-driver-'));
+    const root = await mkdtemp(join(tmpdir(), 'secondlook-driver-'));
     const appPath = join(root, 'app.js');
     await (await import('node:fs/promises')).writeFile(appPath, '/* ENGINE_PROFILE_FIXTURE_V1 */\nconst PERSIST_PROFILE = false;\nconst ENABLE_UNITS = false;\n', 'utf8');
     const first = emitter();
@@ -50,7 +50,7 @@ describe('FakeDriver', () => {
   });
 
   it('returns malformed output and honors cancellation during a delay', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'engine-driver-'));
+    const root = await mkdtemp(join(tmpdir(), 'secondlook-driver-'));
     await (await import('node:fs/promises')).writeFile(join(root, 'app.js'), '/* ENGINE_PROFILE_FIXTURE_V1 */\nconst PERSIST_PROFILE = false;\nconst ENABLE_UNITS = false;\n', 'utf8');
     const malformed = await new FakeDriver({ malformed: true }).execute(request({ workspacePath: root }), { signal: new AbortController().signal, emit: async () => undefined });
     expect((malformed as unknown as Record<string, unknown>).outcome).toBeUndefined();

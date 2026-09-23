@@ -2,17 +2,17 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { Engine } from '../src/workflow.js';
+import { Secondlook } from '../src/workflow.js';
 import { startServer } from '../src/server.js';
 import { Registry } from '../src/extensions.js';
 import { request } from 'node:http';
 
-let engine: Engine | undefined;
+let engine: Secondlook | undefined;
 let runtime: Awaited<ReturnType<typeof startServer>> | undefined;
 afterEach(async () => { await runtime?.close(); await engine?.close(); runtime = undefined; engine = undefined; vi.unstubAllEnvs(); });
 
 it('protects APIs and artifact paths against unauthenticated, cross-origin, unsafe Host and traversal requests', async () => {
-  engine = new Engine(await mkdtemp(join(tmpdir(), 'engine-api-'))); await engine.initialize();
+  engine = new Secondlook(await mkdtemp(join(tmpdir(), 'secondlook-api-'))); await engine.initialize();
   runtime = await startServer(engine, { port: 0 });
   const { origin, token } = runtime;
   const authorization = 'Bearer ' + token;
@@ -43,7 +43,7 @@ it('will not execute a discovered extension without approval', async () => {
 it('exposes the Pi driver and static provider metadata without API key values', async () => {
   const fakeOpenAiKey = 'test-placeholder-key';
   vi.stubEnv('OPENAI_API_KEY', fakeOpenAiKey);
-  engine = new Engine(await mkdtemp(join(tmpdir(), 'engine-api-config-'))); await engine.initialize();
+  engine = new Secondlook(await mkdtemp(join(tmpdir(), 'secondlook-api-config-'))); await engine.initialize();
   runtime = await startServer(engine, { port: 0 });
   const response = await fetch(runtime.origin + '/api/config', { headers: { authorization: 'Bearer ' + runtime.token } });
   expect(response.status).toBe(200);
@@ -76,7 +76,7 @@ it('exposes the Pi driver and static provider metadata without API key values', 
 });
 
 it('rejects invalid Pi and Codex model selections before creating a run', async () => {
-  engine = new Engine(await mkdtemp(join(tmpdir(), 'engine-api-model-validation-'))); await engine.initialize();
+  engine = new Secondlook(await mkdtemp(join(tmpdir(), 'secondlook-api-model-validation-'))); await engine.initialize();
   runtime = await startServer(engine, { port: 0 });
   const authorization = 'Bearer ' + runtime.token;
   const configResponse = await fetch(runtime.origin + '/api/config', { headers: { authorization } });

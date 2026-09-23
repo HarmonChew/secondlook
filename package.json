@@ -1,9 +1,29 @@
 {
-  "name": "@engine/change-review",
+  "name": "secondlook",
   "version": "0.1.0",
   "private": true,
+  "description": "Local-first review loop for coding-agent changes: isolated Git worktrees, real baseline and candidate browser evidence, and an explicit human acceptance decision.",
   "type": "module",
   "license": "Apache-2.0",
+  "author": "Harmon Chew",
+  "homepage": "https://github.com/HarmonChew/secondlook#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarmonChew/secondlook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HarmonChew/secondlook/issues"
+  },
+  "keywords": [
+    "ai-agents",
+    "code-review",
+    "local-first",
+    "agent-verification",
+    "playwright",
+    "git-worktree",
+    "codex",
+    "evidence"
+  ],
   "engines": {
     "node": ">=22.19 <25"
   },

@@ -8,8 +8,8 @@ import { profileSchema, scenarioSchema, type ProjectProfile, type RunKind, type 
 
 const execFile = promisify(execFileCallback);
 const fixtureRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures', 'profile');
-const ownerMarkerName = '.engine-profile-fixture-owner';
-const ownerMarker = 'engine-profile-fixture-v1\n';
+const ownerMarkerName = '.secondlook-profile-fixture-owner';
+const ownerMarker = 'secondlook-profile-fixture-v1\n';
 
 /**
  * The supported project profile for the self-contained demo. The server is a
@@ -19,7 +19,7 @@ const ownerMarker = 'engine-profile-fixture-v1\n';
 export const demoProfile: ProjectProfile = profileSchema.parse({
   schemaVersion: 1,
   id: 'profile-fixture',
-  name: 'Engine profile fixture',
+  name: 'Secondlook profile fixture',
   install: [],
   service: {
     command: process.execPath,
@@ -47,7 +47,7 @@ export const demoProfile: ProjectProfile = profileSchema.parse({
   ],
   source: {
     include: ['**/*'],
-    exclude: ['.git/**', 'node_modules/**', '.engine-artifacts/**']
+    exclude: ['.git/**', 'node_modules/**', '.secondlook-artifacts/**']
   }
 });
 
@@ -264,10 +264,10 @@ export async function ensureDemoRepository(dataDir: string): Promise<string> {
   await writeFile(marker, ownerMarker, { mode: 0o600, flag: 'wx' });
   try {
     await git(repository, ['init', '-b', 'main']);
-    await git(repository, ['config', 'user.name', 'Engine Demo']);
-    await git(repository, ['config', 'user.email', 'engine-demo@localhost']);
+    await git(repository, ['config', 'user.name', 'Secondlook Demo']);
+    await git(repository, ['config', 'user.email', 'secondlook-demo@localhost']);
     await git(repository, ['add', '--all']);
-    await git(repository, ['commit', '-m', 'Initialize Engine profile fixture']);
+    await git(repository, ['commit', '-m', 'Initialize Secondlook profile fixture']);
   } catch (error) {
     throw new Error(`Could not initialize demo repository: ${error instanceof Error ? error.message : String(error)}`);
   }

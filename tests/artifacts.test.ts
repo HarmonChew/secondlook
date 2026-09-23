@@ -8,7 +8,7 @@ import { runSchema, type EvidenceContext } from '../src/contracts.js';
 import { digest, now } from '../src/util.js';
 
 it('rejects missing, foreign, and unapproved evidence references and tampered file artifacts', async () => {
-  const dir = await mkdtemp(join(tmpdir(), 'engine-artifact-test-')); const store = new Store(dir);
+  const dir = await mkdtemp(join(tmpdir(), 'secondlook-artifact-test-')); const store = new Store(dir);
   try {
     const candidate = { workspaceId: 'run', baseCommit: 'base', snapshotId: 'snapshot', sourceDigest: digest('unit test source') };
     const scenario = demoScenarios('bugfix')[0];

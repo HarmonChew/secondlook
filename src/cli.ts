@@ -2,7 +2,7 @@ import { homedir } from 'node:os';
 import { resolve, join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { parseArgs } from 'node:util';
-import { Engine } from './workflow.js';
+import { Secondlook } from './workflow.js';
 import { Registry } from './extensions.js';
 import { startServer } from './server.js';
 import { errorText } from './util.js';
@@ -13,17 +13,17 @@ const { values, positionals } = parseArgs({ allowPositionals: true, options: {
   run: { type: 'string' }, help: { type: 'boolean' },
 } });
 if (values.help) {
-  console.log('Engine — local AI change review\n\npnpm start [--data-dir PATH] [--port 4310] [--open]\npnpm dev\npnpm demo [--feature] [--open]\npnpm exec tsx src/cli.ts cleanup --run RUN_ID [--data-dir PATH]\n\nExecutable extensions: --extension ./examples/custom-check.ts --trust-extension\nTrusted-host mode: only run approved projects and dedicated test identities.');
+  console.log('Secondlook — local AI change review\n\npnpm start [--data-dir PATH] [--port 4310] [--open]\npnpm dev\npnpm demo [--feature] [--open]\npnpm exec tsx src/cli.ts cleanup --run RUN_ID [--data-dir PATH]\n\nExecutable extensions: --extension ./examples/custom-check.ts --trust-extension\nTrusted-host mode: only run approved projects and dedicated test identities.');
 } else {
   const command = positionals[0] ?? 'serve';
   if (!['serve', 'demo', 'cleanup'].includes(command)) throw new Error('Unknown command: ' + command);
-  if (positionals.length > 1) throw new Error('Unexpected positional arguments. Pass flags directly, for example: pnpm demo --data-dir /tmp/engine-review-demo');
-  const dataDir = resolve(values['data-dir'] ?? join(homedir(), '.local', 'state', 'engine-review'));
+  if (positionals.length > 1) throw new Error('Unexpected positional arguments. Pass flags directly, for example: pnpm demo --data-dir /tmp/secondlook-review-demo');
+  const dataDir = resolve(values['data-dir'] ?? join(homedir(), '.local', 'state', 'secondlook-review'));
   const port = values.port ? Number(values.port) : 4310;
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Port must be 0–65535.');
   const registry = new Registry();
   for (const extension of values.extension ?? []) await registry.load(resolve(extension), !!values['trust-extension']);
-  const engine = new Engine(dataDir, registry);
+  const engine = new Secondlook(dataDir, registry);
   try {
     await engine.initialize();
     if (command === 'cleanup') {
@@ -39,7 +39,7 @@ if (values.help) {
       await engine.close();
     } else {
       const runtime = await startServer(engine, { port, dev: values.dev });
-      console.log('Engine review: ' + runtime.origin + '\nToken file (0600): ' + join(dataDir, 'access-token') + '\nMode: trusted host. Acceptance never publishes code. Ctrl+C stops owned processes.');
+      console.log('Secondlook review: ' + runtime.origin + '\nToken file (0600): ' + join(dataDir, 'access-token') + '\nMode: trusted host. Acceptance never publishes code. Ctrl+C stops owned processes.');
       if (values.open) {
         const opener = process.platform === 'darwin' ? 'open' : 'xdg-open';
         const child = spawn(opener, [runtime.url], { shell: false, stdio: 'ignore' });

@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import type { AgentDriver, ScenarioProvider, VerificationCheck } from './contracts.js';
 import { digest } from './util.js';
 
-export interface EngineExtension {
+export interface SecondlookExtension {
   checks?: VerificationCheck[];
   drivers?: AgentDriver[];
   scenarioProviders?: ScenarioProvider[];
@@ -23,7 +23,7 @@ export class Registry {
   readonly scenarioProviders = new Map<string, ScenarioProvider>();
   readonly sources: { path: string; digest: string }[] = [];
 
-  register(extension: EngineExtension) {
+  register(extension: SecondlookExtension) {
     for (const [items, target] of [
       [extension.drivers, this.drivers],
       [extension.checks, this.checks],
@@ -49,8 +49,8 @@ export class Registry {
       throw new Error('Trusted extension changed during import. Restart and explicitly approve the new version: ' + canonical);
     }
 
-    if (!module.default || typeof module.default !== 'object') throw new Error('Extension must export a default EngineExtension object.');
-    const extension = module.default as EngineExtension;
+    if (!module.default || typeof module.default !== 'object') throw new Error('Extension must export a default SecondlookExtension object.');
+    const extension = module.default as SecondlookExtension;
     const sourceFiles = extension.sourceFiles;
     if (sourceFiles !== undefined && (!Array.isArray(sourceFiles) || sourceFiles.some((source) => typeof source !== 'string'))) {
       throw new Error('Extension sourceFiles must be an array of relative file paths.');

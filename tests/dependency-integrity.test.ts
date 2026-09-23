@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { chmod, mkdir, mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { Engine } from '../src/workflow.ts';
+import { Secondlook } from '../src/workflow.ts';
 import { WorkspaceManager } from '../src/workspaces.ts';
 import { Store } from '../src/store.ts';
 import { Registry } from '../src/extensions.ts';
@@ -10,19 +10,19 @@ import { FakeDriver } from '../src/drivers/fake.ts';
 import { createRunSchema, type AgentDriver, type ProjectProfile } from '../src/contracts.ts';
 import { demoProfile, demoScenarios, ensureDemoRepository } from '../src/demo.ts';
 
-const engines: Engine[] = [];
+const engines: Secondlook[] = [];
 
-async function setup(driver?: AgentDriver): Promise<Engine> {
-  const dataDir = await mkdtemp(join(tmpdir(), 'engine-dependency-integrity-'));
+async function setup(driver?: AgentDriver): Promise<Secondlook> {
+  const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-dependency-integrity-'));
   const registry = new Registry();
   if (driver) registry.register({ drivers: [driver] });
-  const engine = new Engine(dataDir, registry);
+  const engine = new Secondlook(dataDir, registry);
   engines.push(engine);
   await engine.initialize();
   return engine;
 }
 
-async function createBugfix(engine: Engine, profile: ProjectProfile) {
+async function createBugfix(engine: Secondlook, profile: ProjectProfile) {
   const repository = await ensureDemoRepository(engine.dataDir);
   return engine.create(createRunSchema.parse({
     title: 'Dependency integrity test',
@@ -54,7 +54,7 @@ afterEach(async () => {
 
 describe('dependency integrity', () => {
   it('distinguishes dependency state changes while excluding tooling caches and validating symlinks', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-dependency-fingerprint-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-dependency-fingerprint-'));
     const store = new Store(dataDir);
     const workspaces = new WorkspaceManager(dataDir, store);
     try {

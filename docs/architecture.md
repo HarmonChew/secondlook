@@ -1,6 +1,6 @@
 # Architecture and state model
 
-Engine is a single foreground Node service. The service owns authoritative
+Secondlook is a single foreground Node service. The service owns authoritative
 writes; the React dashboard is an authenticated client of its loopback API.
 
 ```text
@@ -8,7 +8,7 @@ React/Vite dashboard
         |
         | bearer-authenticated HTTP
         v
-Engine workflow coordinator
+Secondlook workflow coordinator
   |         |             |
 SQLite   Git worktrees  Playwright
 state    + processes     evidence
@@ -46,10 +46,10 @@ approval before install, implementation, verification, or interactive preview.
 
 The normal target checkout is resolved to a Git repository and pinned to the
 selected base commit before any worktree is created. Worktrees live below the
-Engine data directory, not below the target checkout:
+Secondlook data directory, not below the target checkout:
 
 - bug fixes get a detached baseline worktree at the base commit and a candidate
-  worktree on `engine/<run-id>`;
+  worktree on `secondlook/<run-id>`;
 - features get only the candidate worktree on that branch.
 
 Each workspace has an ownership marker signed by a data-directory key. Cleanup
@@ -88,7 +88,7 @@ scanned directories. Direct tooling caches under `node_modules/.vite`,
 runtime must not import or depend on those excluded tool caches.
 
 Agent or manual dependency edits block the run, invalidate acceptance and
-affected evidence, and preserve the files for inspection. Engine does not
+affected evidence, and preserve the files for inspection. Secondlook does not
 silently reinstall, delete, or adopt an unknown dependency tree. Restore a
 known approved installation or create a fresh run. Integrity scans grow in cost
 with the size of the dependency tree, which is an intentional tradeoff for
@@ -180,7 +180,7 @@ are inspected from their intent/result records; reconciliation is conservative
 and does not claim that every external effect can be automatically reconstructed.
 
 Evidence contexts include a digest of the verification runtime source and lock
-version. Restarting with an upgraded Engine/runtime invalidates the prior
+version. Restarting with an upgraded Secondlook/runtime invalidates the prior
 verification context; reverify before accepting the candidate.
 
 Acceptance requires the exact candidate snapshot, review revision, fresh current

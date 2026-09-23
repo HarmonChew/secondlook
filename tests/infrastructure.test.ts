@@ -26,7 +26,7 @@ async function makeRun(dataDir: string, repository: string, store: Store, kind: 
 
 describe('Store', () => {
   it('persists stage evidence, checks artifact references, and quarantines partial files', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-store-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-store-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const run = await makeRun(dataDir, repository, store);
@@ -51,7 +51,7 @@ describe('Store', () => {
   });
 
   it('rejects cross-run artifact references', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-store-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-store-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const first = await makeRun(dataDir, repository, store);
@@ -65,7 +65,7 @@ describe('Store', () => {
 
 describe('WorkspaceManager', () => {
   it('keeps the target checkout unchanged and fingerprints approved source only', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-workspace-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-workspace-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const manager = new WorkspaceManager(dataDir, store);
@@ -100,7 +100,7 @@ describe('WorkspaceManager', () => {
 
 describe('ProcessManager', () => {
   it('uses argument arrays without a shell, enforces the service lock, and cancels descendants', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-process-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-process-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const run = await makeRun(dataDir, repository, store);
@@ -138,7 +138,7 @@ describe('ProcessManager', () => {
   }, 30_000);
 
   it('verifies a managed process start when the ambient timezone differs from the supervisor environment', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-process-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-process-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const run = await makeRun(dataDir, repository, store);
@@ -161,7 +161,7 @@ describe('ProcessManager', () => {
   }, 30_000);
 
   it('still recognizes a recorded process after the ambient timezone changes', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-process-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-process-'));
     const repository = await ensureDemoRepository(dataDir);
     const store = new Store(dataDir);
     const run = await makeRun(dataDir, repository, store);

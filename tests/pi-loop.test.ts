@@ -81,7 +81,7 @@ describe('executePiJob', () => {
   let workspacePath: string;
 
   beforeEach(async () => {
-    workspacePath = await mkdtemp(join(tmpdir(), 'engine-pi-loop-'));
+    workspacePath = await mkdtemp(join(tmpdir(), 'secondlook-pi-loop-'));
     await writeFile(join(workspacePath, 'app.ts'), initialContent, 'utf8');
   });
 

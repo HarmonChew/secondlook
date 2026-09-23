@@ -132,7 +132,7 @@ async function main(): Promise<void> {
       additionalDirectories: [],
       modelReasoningEffort: 'medium',
       skipGitRepoCheck: true,
-      threadSource: 'engine-change-review'
+      threadSource: 'secondlook-change-review'
     });
     const streamed = await thread.runStreamed(promptFor(job), { outputSchema: OUTPUT_SCHEMA });
     let structuredText: string | undefined;

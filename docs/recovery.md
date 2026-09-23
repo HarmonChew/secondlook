@@ -1,12 +1,12 @@
 # Recovery, pause, and cleanup
 
-Engine is a foreground local service. It is designed to reconstruct durable
+Secondlook is a foreground local service. It is designed to reconstruct durable
 state after a process disappears, not to resume an exact model conversation.
 
 ## Restart
 
 Run the same command with the same data directory. SQLite migrations run before
-the service accepts requests. On startup Engine:
+the service accepts requests. On startup Secondlook:
 
 - marks active stage attempts as `interrupted`;
 - inspects pending filesystem/process operations and install journal entries;
@@ -21,7 +21,7 @@ the candidate before resuming.
 
 Installation recovery is deliberately conservative. A known-successful setup
 command may be skipped. If an install command was interrupted and its outcome is
-unknown, Engine blocks the run instead of replaying it blindly; inspect the
+unknown, Secondlook blocks the run instead of replaying it blindly; inspect the
 candidate/package state and either approve a safe continuation or create a fresh
 run. Filesystem and process intent records help reconciliation, but they do not
 make external side effects atomic or guarantee complete automatic recovery.
@@ -57,7 +57,7 @@ as a universal filesystem audit.
 Cancellation stops owned process groups with identity/token checks and records a
 cancelled run. A process start identity is a `ps(1)` rendering taken under a
 pinned locale and timezone, so it never depends on the service's own
-environment; a process recorded by an older Engine build can therefore be
+environment; a process recorded by an older Secondlook build can therefore be
 reported `unknown` once after an upgrade, which is the conservative outcome. A
 browser/server startup failure produces environment/error evidence and is not
 treated as the application reproducing the reported bug. Infrastructure retries
@@ -79,7 +79,7 @@ are not the expected Git worktrees, dirty candidate/baseline worktrees, and
 ignored-untracked content such as `node_modules` or `.env` files. A dirty or
 ignored-untracked worktree is preserved so manual work is not lost. If cleanup
 is only partially observed, recovery remains blocked and the stored snapshot,
-diff, artifacts, and data are retained; Engine does not auto-delete uncertain
+diff, artifacts, and data are retained; Secondlook does not auto-delete uncertain
 paths. Run records and artifacts remain even after clean worktrees are removed.
 
 Never recursively remove the data directory or a repository as a cleanup

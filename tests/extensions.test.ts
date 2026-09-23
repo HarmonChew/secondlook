@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { Registry } from '../src/extensions.js';
 
 it('invalidates verification when a declared imported helper changes', async () => {
-  const directory = await mkdtemp(join(tmpdir(), 'engine-extension-'));
+  const directory = await mkdtemp(join(tmpdir(), 'secondlook-extension-'));
   const helper = join(directory, 'helper.mjs'); const entry = join(directory, 'check.mjs');
   await writeFile(helper, 'export const value = true;\n');
   await writeFile(entry, 'import {value} from "./helper.mjs"; export default {sourceFiles:["helper.mjs"],checks:[{id:"custom",version:"1",async run(){return {checkId:"custom",version:"1",status:value?"passed":"failed",summary:"actual helper result",fileIds:[]}}}]};');

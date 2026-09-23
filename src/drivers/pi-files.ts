@@ -134,7 +134,7 @@ export class PiFiles {
     if ((before?.sha256 ?? null) !== expectedSha256) throw new Error('Source changed. Read it again before writing.');
     // Keep temporary bytes outside source. Abrupt worker termination may leave
     // staging files, but those can never become candidate code or evidence.
-    const temporary = join(this.staging, `.engine-pi-${uid()}.tmp`);
+    const temporary = join(this.staging, `.secondlook-pi-${uid()}.tmp`);
     const created: string[] = [];
     let committed = false;
     const handle = await open(temporary, 'wx', 0o600);

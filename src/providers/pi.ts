@@ -50,7 +50,7 @@ export function resolvePiModel(selection: ModelSelection) {
   return { model, apiKeyEnv: entry.apiKeyEnv };
 }
 
-/** The only Engine-to-Pi request boundary; tools are executed by Engine. */
+/** The only Secondlook-to-Pi request boundary; tools are executed by Secondlook. */
 export function streamPiModel(selection: ModelSelection, context: Context, options: Pick<SimpleStreamOptions, 'signal' | 'apiKey' | 'fetch'>) {
   const { model } = resolvePiModel(selection);
   if (!options.apiKey || options.apiKey.trim().length < 4) throw new Error('The selected provider API key is unavailable.');

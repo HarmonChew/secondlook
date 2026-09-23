@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { EngineExtension } from '../src/extensions.js';
+import type { SecondlookExtension } from '../src/extensions.js';
 
 // This trusted extension lives outside core. It records an actual deterministic
 // check, not a model opinion. It does not establish full accessibility.
@@ -19,4 +19,4 @@ export default {
       };
     },
   }],
-} satisfies EngineExtension;
+} satisfies SecondlookExtension;

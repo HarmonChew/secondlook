@@ -17,7 +17,7 @@ async function eventuallyGone(pid: number, timeoutMs = 4000): Promise<boolean> {
 
 describe('process safety', () => {
   it('serializes concurrent takeover of a stale service lock', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-lock-safety-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-lock-safety-'));
     const stale = { pid: 999_999_999, identity: 'ps:stale-owner', token: 'stale-owner-token-123456', startedAt: new Date().toISOString() };
     await writeFile(join(dataDir, 'service.lock'), JSON.stringify(stale));
     const storeA = new Store(dataDir);
@@ -41,7 +41,7 @@ describe('process safety', () => {
   });
 
   it('redacts caller secrets across stdout/stderr chunk boundaries', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-redaction-safety-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-redaction-safety-'));
     const store = new Store(dataDir);
     const manager = new ProcessManager(store);
     const secret = 'chunked-review-auth-cookie-value';
@@ -66,7 +66,7 @@ describe('process safety', () => {
   }, 15_000);
 
   it('rejects too-short credential redaction inputs without echoing values', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-redaction-validation-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-redaction-validation-'));
     const store = new Store(dataDir);
     const manager = new ProcessManager(store);
     const previous = process.env.ENGINE_TEST_SECRET_VALUE;
@@ -85,7 +85,7 @@ describe('process safety', () => {
   });
 
   it('kills a grandchild after the direct target exits', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-group-safety-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-group-safety-'));
     const store = new Store(dataDir);
     const manager = new ProcessManager(store);
     const script = [
@@ -111,7 +111,7 @@ describe('process safety', () => {
   }, 15_000);
 
   it('fails a missing target without leaving a running record or supervisor', async () => {
-    const dataDir = await mkdtemp(join(tmpdir(), 'engine-startup-safety-'));
+    const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-startup-safety-'));
     const store = new Store(dataDir);
     const manager = new ProcessManager(store);
     try {
