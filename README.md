@@ -59,8 +59,9 @@ missing, use:
 pnpm exec playwright install --with-deps chromium
 ```
 
-The installation command may compile the maintained `better-sqlite3` binding.
-The package manager build allowlist is in `pnpm-workspace.yaml`.
+`better-sqlite3` ships prebuilt bindings for the documented platforms, so this
+step does not compile native code. The package manager build allowlist is in
+`pnpm-workspace.yaml`.
 
 ## Start the review service
 
