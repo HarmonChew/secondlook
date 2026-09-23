@@ -1,4 +1,4 @@
-/* ENGINE_PROFILE_FIXTURE_V1: this file is intentionally small and deterministic. */
+/* SECONDLOOK_PROFILE_FIXTURE_V1: this file is intentionally small and deterministic. */
 const PERSIST_PROFILE = false;
 const ENABLE_UNITS = false;
 

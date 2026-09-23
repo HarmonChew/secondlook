@@ -73,7 +73,7 @@ starting the worker, then passes only that credential reference to the
 supervised process. The key value is never written to the job file or shown in
 the ticket UI. A trusted bootstrap disables candidate TypeScript configuration,
 so repository aliases cannot redirect provider-worker imports. Codex continues to use `CODEX_API_KEY` and its existing
-`ENGINE_CODEX_MODEL` configuration.
+`SECONDLOOK_CODEX_MODEL` configuration.
 
 The worker is bounded to 32 model turns and 100 tool calls. Its only tools are
 `list_files`, `read_file`, `write_file`, and `finish`; it has no command,

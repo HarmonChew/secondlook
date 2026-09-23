@@ -18,7 +18,7 @@ export type FakeDriverOptions = {
   delayMs?: number;
 };
 
-const FIXTURE_MARKER = 'ENGINE_PROFILE_FIXTURE_V1';
+const FIXTURE_MARKER = 'SECONDLOOK_PROFILE_FIXTURE_V1';
 const PERSIST_FLAG = 'const PERSIST_PROFILE = false;';
 const ENABLE_FLAG = 'const ENABLE_UNITS = false;';
 const BUTTON_LABEL = '<button type="submit" data-testid="save-profile">Save</button>';

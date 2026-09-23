@@ -32,7 +32,7 @@ async function startFixture(repository: string): Promise<{ child: ChildProcess; 
     const timer = setTimeout(() => reject(new Error(`Fixture did not start: ${output}`)), 10_000);
     child.stdout?.on('data', (chunk) => {
       output += String(chunk);
-      if (output.includes('ENGINE_FIXTURE_READY')) { clearTimeout(timer); resolve(); }
+      if (output.includes('SECONDLOOK_FIXTURE_READY')) { clearTimeout(timer); resolve(); }
     });
     child.once('error', (error) => { clearTimeout(timer); reject(error); });
     child.once('exit', (code) => { if (code !== 0) { clearTimeout(timer); reject(new Error(`Fixture exited ${code}: ${output}`)); } });

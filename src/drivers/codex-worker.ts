@@ -96,7 +96,7 @@ async function main(): Promise<void> {
   const events: ExecutionEvent[] = [];
   const emit = (event: ExecutionEvent) => {
     events.push(event);
-    process.stdout.write(`ENGINE_CODEX_EVENT ${JSON.stringify(event)}\n`);
+    process.stdout.write(`SECONDLOOK_CODEX_EVENT ${JSON.stringify(event)}\n`);
   };
   const apiKey = process.env.CODEX_API_KEY;
   if (!apiKey) {
@@ -116,7 +116,7 @@ async function main(): Promise<void> {
     CODEX_HOME: job.codexHome,
     CODEX_API_KEY: apiKey
   };
-  if (job.model) sdkEnv.ENGINE_CODEX_MODEL = job.model;
+  if (job.model) sdkEnv.SECONDLOOK_CODEX_MODEL = job.model;
 
   try {
     emit({ type: 'agent.worker.started', message: 'Codex worker started.' });
@@ -141,7 +141,7 @@ async function main(): Promise<void> {
       const summary = eventFromThread(event);
       if (summary) {
         events.push(summary);
-        process.stdout.write(`ENGINE_CODEX_EVENT ${JSON.stringify(summary)}\n`);
+        process.stdout.write(`SECONDLOOK_CODEX_EVENT ${JSON.stringify(summary)}\n`);
       }
       if (event.type === 'turn.completed') usage = event.usage;
       if (event.type === 'item.completed' && event.item.type === 'agent_message') structuredText = event.item.text;

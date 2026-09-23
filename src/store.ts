@@ -106,7 +106,7 @@ export class Store {
 
   constructor(dataDir: string) {
     this.dataDir = resolve(dataDir);
-    this.dbPath = join(this.dataDir, 'engine.sqlite');
+    this.dbPath = join(this.dataDir, 'secondlook.sqlite');
     this.artifactDir = join(this.dataDir, 'artifact-data');
     mkdirSync(this.dataDir, { recursive: true, mode: 0o700 });
     chmodSync(this.dataDir, 0o700);

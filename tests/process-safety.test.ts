@@ -69,15 +69,15 @@ describe('process safety', () => {
     const dataDir = await mkdtemp(join(tmpdir(), 'secondlook-redaction-validation-'));
     const store = new Store(dataDir);
     const manager = new ProcessManager(store);
-    const previous = process.env.ENGINE_TEST_SECRET_VALUE;
-    process.env.ENGINE_TEST_SECRET_VALUE = 'x';
-    const command = { command: process.execPath, args: ['-e', 'setInterval(() => {}, 10000)'], cwd: '.', timeoutMs: 5000, envRefs: { TEST_TOKEN: 'ENGINE_TEST_SECRET_VALUE' } };
+    const previous = process.env.SECONDLOOK_TEST_SECRET_VALUE;
+    process.env.SECONDLOOK_TEST_SECRET_VALUE = 'x';
+    const command = { command: process.execPath, args: ['-e', 'setInterval(() => {}, 10000)'], cwd: '.', timeoutMs: 5000, envRefs: { TEST_TOKEN: 'SECONDLOOK_TEST_SECRET_VALUE' } };
     try {
       await expect(manager.start('redaction-validation', command, dataDir)).rejects.toThrow(/too short/);
       await expect(manager.start('redaction-validation', { ...command, envRefs: {} }, dataDir, undefined, undefined, ['x'])).rejects.toThrow(/at least 4/);
     } finally {
-      if (previous === undefined) delete process.env.ENGINE_TEST_SECRET_VALUE;
-      else process.env.ENGINE_TEST_SECRET_VALUE = previous;
+      if (previous === undefined) delete process.env.SECONDLOOK_TEST_SECRET_VALUE;
+      else process.env.SECONDLOOK_TEST_SECRET_VALUE = previous;
       await manager.close();
       store.close();
       await rm(dataDir, { recursive: true, force: true });

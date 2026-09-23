@@ -29,7 +29,7 @@ async function main() {
   const events: ExecutionEvent[] = [];
   const result = await executePiJob(job, { signal: controller.signal, apiKey, stagingPath: dirname(resultPath), emit: async event => {
     events.push(event);
-    process.stdout.write(`ENGINE_PI_EVENT ${JSON.stringify(event)}\n`);
+    process.stdout.write(`SECONDLOOK_PI_EVENT ${JSON.stringify(event)}\n`);
   } });
   await writeResult({ ok: true, agentResult: result, events });
 }

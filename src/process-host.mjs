@@ -167,7 +167,7 @@ function start(config) {
     process.send?.({ type: 'target-error', error: redact(error?.message ?? String(error)) });
     return;
   }
-  const env = { ...(config.env ?? {}), ENGINE_PROCESS_TOKEN: token };
+  const env = { ...(config.env ?? {}), SECONDLOOK_PROCESS_TOKEN: token };
   try {
     child = spawn(config.command, config.args, {
       cwd: config.cwd,

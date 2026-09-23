@@ -35,9 +35,9 @@ function safeOutput(value: string): string {
 export function parseCodexWorkerEvents(output: string): ExecutionEvent[] {
   const events: ExecutionEvent[] = [];
   for (const line of output.split('\n')) {
-    if (!line.startsWith('ENGINE_CODEX_EVENT ')) continue;
+    if (!line.startsWith('SECONDLOOK_CODEX_EVENT ')) continue;
     try {
-      const value = JSON.parse(line.slice('ENGINE_CODEX_EVENT '.length)) as ExecutionEvent;
+      const value = JSON.parse(line.slice('SECONDLOOK_CODEX_EVENT '.length)) as ExecutionEvent;
       if (value && typeof value.type === 'string' && typeof value.message === 'string') events.push(value);
     } catch {
       // A malformed worker log line is ignored; the result file is authoritative.
@@ -57,7 +57,7 @@ export class CodexDriver implements AgentDriver {
 
   constructor(processes: ProcessManager, options: CodexDriverOptions = {}) {
     this.processes = processes;
-    this.options = { timeoutMs: options.timeoutMs ?? 300_000, model: options.model ?? process.env.ENGINE_CODEX_MODEL ?? '' };
+    this.options = { timeoutMs: options.timeoutMs ?? 300_000, model: options.model ?? process.env.SECONDLOOK_CODEX_MODEL ?? '' };
   }
 
   async execute(request: AgentExecutionRequest, context: { signal: AbortSignal; emit: (event: ExecutionEvent) => Promise<void> }): Promise<AgentExecutionResult> {
@@ -99,7 +99,7 @@ export class CodexDriver implements AgentDriver {
       timeoutMs: this.options.timeoutMs,
       envRefs: {
         CODEX_API_KEY: 'CODEX_API_KEY',
-        ...(process.env.ENGINE_CODEX_MODEL ? { ENGINE_CODEX_MODEL: 'ENGINE_CODEX_MODEL' } : {})
+        ...(process.env.SECONDLOOK_CODEX_MODEL ? { SECONDLOOK_CODEX_MODEL: 'SECONDLOOK_CODEX_MODEL' } : {})
       }
     };
     let processResult: { exitCode: number; output: string; logPath: string };

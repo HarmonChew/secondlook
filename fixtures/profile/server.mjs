@@ -97,7 +97,7 @@ const server = createServer(async (request, response) => {
 server.listen(port, '127.0.0.1', () => {
   const address = server.address();
   const actualPort = typeof address === 'object' && address ? address.port : port;
-  process.stdout.write(`ENGINE_FIXTURE_READY http://127.0.0.1:${actualPort}\n`);
+  process.stdout.write(`SECONDLOOK_FIXTURE_READY http://127.0.0.1:${actualPort}\n`);
 });
 
 function shutdown() { server.close(() => process.exit(0)); }
