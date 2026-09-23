@@ -1,0 +1,24 @@
+# Normalize line endings to LF in the repository and on checkout.
+#
+# This is a correctness requirement, not a style preference. Engine hashes file
+# contents for the source fingerprint and the dependency-integrity manifest, so
+# a CRLF checkout on a Windows/WSL2 machine would produce different digests for
+# the same revision. Keeping LF everywhere makes a digest recorded on one
+# platform reproducible on another.
+* text=auto eol=lf
+
+# Captured and binary artifacts are never normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.mp4 binary
+*.webm binary
+*.zip binary
+*.gz binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.pdf binary

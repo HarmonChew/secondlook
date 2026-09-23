@@ -1,0 +1,11 @@
+node_modules/
+.pnpm-store/
+dist/
+coverage/
+.engine/
+output/
+test-results/
+*.db*
+.env*
+!.env.example
+*.log

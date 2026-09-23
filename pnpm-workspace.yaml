@@ -1,0 +1,10 @@
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  '@swc/core': true
+  rolldown: true
+  '@google/genai': false
+  protobufjs: false
+minimumReleaseAgeExclude:
+  - '@earendil-works/pi-ai@0.86.1'
+  - '@earendil-works/pi-telemetry@0.86.1'

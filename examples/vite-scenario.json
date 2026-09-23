@@ -1,0 +1,66 @@
+[
+  {
+    "id": "profile-persistence",
+    "name": "Display name survives refresh",
+    "revision": 1,
+    "route": "/profile",
+    "viewport": { "width": 1280, "height": 800 },
+    "fixture": {
+      "mode": "isolated-test",
+      "description": "Use the project’s dedicated resettable test backend.",
+      "reset": { "path": "/__test/reset", "body": {} },
+      "headersRefs": {},
+      "mocks": []
+    },
+    "setupActions": [
+      {
+        "id": "initial-name",
+        "label": "Confirm the starting display name",
+        "type": "assert",
+        "selector": "[data-testid=display-name]",
+        "condition": "value",
+        "expected": "Morgan Demo",
+        "role": "precondition"
+      }
+    ],
+    "actions": [
+      {
+        "id": "enter-name",
+        "label": "Enter Taylor Demo",
+        "type": "fill",
+        "selector": "[data-testid=display-name]",
+        "value": "Taylor Demo"
+      },
+      {
+        "id": "save",
+        "label": "Save the profile",
+        "type": "click",
+        "selector": "[data-testid=save-profile]"
+      },
+      {
+        "id": "save-success",
+        "label": "Show the save confirmation",
+        "type": "assert",
+        "selector": "[data-testid=save-status]",
+        "condition": "text",
+        "expected": "Saved successfully",
+        "role": "expectation"
+      },
+      {
+        "id": "reload",
+        "label": "Refresh the page",
+        "type": "reload"
+      },
+      {
+        "id": "persisted",
+        "label": "Keep the new name after refresh",
+        "type": "assert",
+        "selector": "[data-testid=display-name]",
+        "condition": "value",
+        "expected": "Taylor Demo",
+        "role": "expectation"
+      }
+    ],
+    "regressionAssertionId": "persisted"
+  }
+]

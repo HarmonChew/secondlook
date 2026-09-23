@@ -1,0 +1,10 @@
+Engine — local AI change review
+Copyright 2026 the Engine contributors
+
+This project is licensed under the Apache License, Version 2.0. See LICENSE.
+
+The npm dependencies listed in package.json are third-party works and remain
+under their respective licenses and notices. Important runtime dependencies
+include React, Vite, Zod, better-sqlite3, Playwright, minimatch, tsx, Vitest,
+and the OpenAI Codex SDK. Their package distributions contain their applicable
+license texts.

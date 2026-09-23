@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "vite-frontend",
+  "name": "Vite frontend (adapt to the project)",
+  "install": [
+    {
+      "command": "pnpm",
+      "args": ["install", "--frozen-lockfile"],
+      "cwd": ".",
+      "timeoutMs": 3600000,
+      "envRefs": {}
+    }
+  ],
+  "service": {
+    "command": "pnpm",
+    "args": ["exec", "vite", "--host", "127.0.0.1", "--port", "{{port}}", "--strictPort"],
+    "cwd": ".",
+    "timeoutMs": 3600000,
+    "envRefs": {},
+    "healthPath": "/",
+    "startupTimeoutMs": 30000
+  },
+  "baseURL": "http://127.0.0.1:{{port}}",
+  "checks": [
+    {
+      "id": "vite-build",
+      "name": "Project build",
+      "required": false,
+      "command": {
+        "command": "pnpm",
+        "args": ["run", "build"],
+        "cwd": ".",
+        "timeoutMs": 3600000,
+        "envRefs": {}
+      }
+    }
+  ],
+  "source": {
+    "include": ["**/*"],
+    "exclude": [".git/**", "node_modules/**", "dist/**", "coverage/**", "test-results/**", ".engine-artifacts/**"]
+  }
+}
