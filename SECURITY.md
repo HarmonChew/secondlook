@@ -121,7 +121,17 @@ screenshots/traces/videos.
 This MVP was exercised locally only on macOS. Linux/WSL2 are target/CI paths and
 were not run locally here.
 
-Until a release-specific security contact is published, open a private GitHub
-security advisory for the repository owner or contact the maintainer listed in
-the project metadata. For ordinary bugs, use the contribution process in
+Report vulnerabilities through GitHub's private vulnerability reporting for this
+repository:
+
+<https://github.com/HarmonChew/secondlook/security/advisories/new>
+
+That channel is private between you and the maintainer. If it is unavailable,
+email <harmontchew@gmail.com> with `Secondlook security` in the subject line. Do
+not open a public issue for a vulnerability.
+
+Only the latest `main` is supported. Secondlook is a pre-1.0 MVP with no
+maintained release branches, so fixes land on `main` and there are no backports.
+
+For ordinary bugs, use the contribution process in
 [`CONTRIBUTING.md`](CONTRIBUTING.md).

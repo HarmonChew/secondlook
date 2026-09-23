@@ -75,12 +75,12 @@ MVP dependency.
 
 ## Release readiness
 
-The maintainer checklist for publishing this project — version control, package
-metadata, CI matrix, formatting and linting, community files, the release and
-upgrade policy, and disclosure hygiene — lives in
-[docs/open-source-readiness.md](docs/open-source-readiness.md). Items labelled
-P0 there gate any public release. Several of its small items are deliberately
-good starting points for a first contribution.
+Secondlook is pre-1.0, published for version control and early review rather
+than for production use. Release-gating work — version control, package
+metadata, the CI matrix, formatting and linting, community files, the release
+and upgrade policy, and disclosure hygiene — takes priority over new features.
+The "Known gaps and deferred scope" section of [README.md](README.md) is the
+current public statement of what is and is not done.
 
 By contributing, you agree that your contribution is provided under the
 Apache-2.0 license in [LICENSE](LICENSE).

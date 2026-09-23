@@ -162,10 +162,6 @@ Starter documents are in [`examples/`](examples/):
   to adapt to a project’s actual scripts.
 - [`vite-scenario.json`](examples/vite-scenario.json) — a form scenario with
   explicit selectors and a reset recipe.
-- [`erp-staff-profile.json`](examples/erp-staff-profile.json) — an illustrative
-  profile for the Staff application discussed during design. It is not an
-  executed integration and must be adapted to the approved local startup,
-  health, auth, fixture, and reset mechanisms of that checkout.
 
 The approved project profile controls installation, startup, health checks,
 verification commands, browser base URL, viewports, environment-variable
@@ -397,9 +393,6 @@ Read [SECURITY.md](SECURITY.md) before connecting a real project and
   supported at a time.
 - The included feature API states are approved simulated responses, not proof
   of authorization or production persistence.
-- The ERP Staff profile is a starting point only; the real repository’s
-  environment, authentication, test data, and reset contract must be approved
-  and validated before use.
 - Native Windows support, streamed desktops, visual similarity scoring, and
   model-conversation resumption are out of scope for this MVP.
 

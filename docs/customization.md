@@ -136,12 +136,12 @@ presses `Approve operation`. The approval key includes the review revision, so
 feedback, manual edits, scenario revisions, or a new candidate cannot silently
 reuse an old approval.
 
-## ERP Staff profile
+## Monorepo and multi-service profiles
 
-[`../examples/erp-staff-profile.json`](../examples/erp-staff-profile.json) is a
-starting point for the sibling IT ERP Staff application. The sibling repository
-contains multiple Nx/Angular services and local gateway scripts; a profile must
-choose one approved launch path, a loopback health URL, test auth state, fixture
-mode, and reset recipe before use. This repository has not run that profile
-against the ERP checkout. Treat it as illustrative configuration, not a
-verified integration.
+A profile targets one application inside a repository, not the whole repository.
+In a monorepo with several services and local gateway scripts, choose one
+approved launch path, a loopback health URL, test auth state, a fixture mode,
+and a reset recipe before creating a ticket. Secondlook cannot infer any of that
+from a natural-language request, and a profile that has not been run against the
+target checkout is illustrative configuration rather than a verified
+integration.
